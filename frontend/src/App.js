@@ -1,12 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Cadastro from "./pages/Cadastro";
+import Funcionarios from "./pages/Funcionarios";
+import Entregas from "./pages/Entregas";
 import NovoFuncionario from "./pages/NovoFuncionario";
-
-import RegistroEntradas from "./pages/RegistroEntradas";
-import RegistroEntregas from "./pages/RegistroEntregas";
 
 import Sidebar from "./components/Sidebar";
 
@@ -15,9 +14,7 @@ function LayoutWithSidebar({ children }) {
   return (
     <div style={{ display: "flex", width: "100%" }}>
       <Sidebar />
-      <div style={{ flex: 1, padding: "20px" }}>
-        {children}
-      </div>
+      <div style={{ flex: 1, padding: "20px" }}>{children}</div>
     </div>
   );
 }
@@ -26,10 +23,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* Telas sem sidebar */}
         <Route path="/" element={<Login />} />
-        <Route path="/registrar" element={<Register />} />
 
         {/* Telas COM sidebar */}
         <Route
@@ -42,6 +37,33 @@ function App() {
         />
 
         <Route
+          path="/cadastro"
+          element={
+            <LayoutWithSidebar>
+              <Cadastro />
+            </LayoutWithSidebar>
+          }
+        />
+
+        <Route
+          path="/funcionarios"
+          element={
+            <LayoutWithSidebar>
+              <Funcionarios />
+            </LayoutWithSidebar>
+          }
+        />
+
+        <Route
+          path="/entregas"
+          element={
+            <LayoutWithSidebar>
+              <Entregas />
+            </LayoutWithSidebar>
+          }
+        />
+
+        <Route
           path="/novo"
           element={
             <LayoutWithSidebar>
@@ -49,25 +71,6 @@ function App() {
             </LayoutWithSidebar>
           }
         />
-
-        <Route
-          path="/registro-entradas"
-          element={
-            <LayoutWithSidebar>
-              <RegistroEntradas />
-            </LayoutWithSidebar>
-          }
-        />
-
-        <Route
-          path="/registro-entregas"
-          element={
-            <LayoutWithSidebar>
-              <RegistroEntregas />
-            </LayoutWithSidebar>
-          }
-        />
-
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api, { registerUser } from "../services/api";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -7,74 +8,182 @@ export default function Cadastro() {
   const [senha, setSenha] = useState("");
   const [repitaSenha, setRepitaSenha] = useState("");
 
-  const handleRegister = () => {
-    console.log("Cadastrando usuário...", { nome, email, telefone, senha });
+  const handleRegister = async () => {
+    if (!nome || !email || !senha) {
+      return alert("Preencha todos os campoes obrigatórios!");
+    }
+
+    if (senha !== repitaSenha) {
+      return alert("As senhas não coincidem!");
+    }
+
+    try {
+      const response = await registerUser({
+        nome,
+        email,
+        senha,
+      });
+
+      alert("usuário cadastrado com sucesso!");
+      console.log("Resposta do backend:", response.data);
+    } catch (err) {
+      let mensagemErro = "Erro desconhecido. Por favor, tente novamente.";
+
+      if (err.response && err.response.data && err.response.data.error) {
+        mensagemErro = err.response.data.error;
+      } else if (err.message && err.message.includes("Network Error")) {
+        mensagemErro =
+          "Erro de conexão. Verifique se o servidor está ativo na porta 5000.";
+      }
+
+      console.log("Erro do Backend/Axios:", err.response?.data || err);
+      alert(`❌ Erro no Cadastro:\n\n${mensagemErro}`);
+    }
   };
 
   return (
-    <div className="w-full h-screen flex bg-[#E5E5E5]">
-      {/* Lado esquerdo */}
-      <div className="w-1/2 bg-[#7D7D7D] flex flex-col items-center justify-center text-white p-10">
-        <img src="/logo.png" alt="Kozzy" className="w-40 mb-6" />
-        <h1 className="text-3xl font-semibold mb-4">Olá, seja bem-vindo(a) novo usuário!</h1>
-        <p className="text-center text-lg w-3/4">Crie a sua conta nova no SA para utilizar as funcionalidades do APP!</p>
+    <div style={styles.container}>
+      {/* PAINEL ESQUERDO */}
+      <div style={styles.leftPainel}>
+        <img
+          src="Logo_Kozzy.png"
+          alt="Kozzy"
+          style={{ width: 120, marginBottom: 20 }}
+        />
+
+        <h1 style={styles.title}>Olá, seja bem-vindo(a) novo usuário!</h1>
+
+        <p style={styles.subTitle}>
+          Crie a sua conta nova no SA para utilizar as funcionalidades do APP!
+        </p>
       </div>
 
-      {/* Lado direito */}
-      <div className="w-1/2 flex flex-col justify-center px-20">
-        <h2 className="text-3xl font-bold mb-8">Crie a sua conta</h2>
+      {/* PAINEL DIREITO */}
+      <div style={styles.rightPainel}>
+        <h2 style={styles.titleCadastro}>Crie a sua conta</h2>
 
-        <div className="flex flex-col gap-4 w-full">
+        <input
+          type="text"
+          placeholder="Nome"
+          style={styles.input}
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+        />
 
-          <input
-            type="text"
-            placeholder="Nome"
-            className="border rounded-xl p-3 text-lg"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
+        <input
+          type="email"
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="border rounded-xl p-3 text-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <input
+          type="text"
+          placeholder="Telefone"
+          style={styles.input}
+          value={telefone}
+          onChange={(e) => setTelefone(e.target.value)}
+        />
 
-          <input
-            type="text"
-            placeholder="Telefone"
-            className="border rounded-xl p-3 text-lg"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
-          />
+        <input
+          type="password"
+          placeholder="Senha"
+          style={styles.input}
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Senha"
-            className="border rounded-xl p-3 text-lg"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+        <input
+          type="password"
+          placeholder="Repita a senha"
+          style={styles.input}
+          value={repitaSenha}
+          onChange={(e) => setRepitaSenha(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Repita a senha"
-            className="border rounded-xl p-3 text-lg"
-            value={repitaSenha}
-            onChange={(e) => setRepitaSenha(e.target.value)}
-          />
-
-          <button
-            onClick={handleRegister}
-            className="bg-[#8C1B1B] text-white p-3 rounded-xl text-lg mt-2"
-          >
-            Avançar
-          </button>
-
-        </div>
+        <button style={styles.btnAvancar} onClick={handleRegister}>
+          <span style={styles.btnText}>Avançar</span>
+        </button>
       </div>
     </div>
   );
 }
+
+// ====================== ESTILO (convertido do React Native para Web) ======================
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "100vh",
+    width: "100%",
+    flexDirection: "row",
+  },
+
+  leftPainel: {
+    backgroundColor: "#818C92",
+    width: "40%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    color: "#fff",
+  },
+
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginTop: 20,
+    textAlign: "center",
+    maxWidth: "70%",
+  },
+
+  subTitle: {
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: "center",
+    maxWidth: "70%",
+  },
+
+  rightPainel: {
+    flex: 1,
+    backgroundColor: "#fff",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  titleCadastro: {
+    fontSize: 26,
+    fontWeight: "600",
+    marginBottom: 20,
+  },
+
+  input: {
+    width: "70%",
+    padding: 12,
+    marginTop: 12,
+    borderRadius: 6,
+    border: "1px solid #bbb",
+    fontSize: 16,
+  },
+
+  btnAvancar: {
+    width: "70%",
+    backgroundColor: "#8E2927",
+    padding: 14,
+    borderRadius: 6,
+    marginTop: 25,
+    border: "none",
+    cursor: "pointer",
+  },
+
+  btnText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+};
