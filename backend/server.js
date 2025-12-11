@@ -10,9 +10,11 @@ app.use(cors());
 
 // Conexão com MongoDB Atlas
 mongoose
-  .connect("mongodb+srv://allanunus_db_user:G7wq4gCXfePQ0nza@cluster0.gsepwba.mongodb.net/?appName=Cluster0")
+  .connect(
+    "mongodb+srv://allanunus_isamon:R9wFDYqvIxTjqoyH@appkozzycontatos.11nsii8.mongodb.net/portaria_db?appName=appkozzycontatos"
+  )
   .then(() => console.log("MongoDB conectado"))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 // Rotas
 app.use("/auth", require("./routes/authRoutes"));
